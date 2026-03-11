@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__Claude_Preview__preview_start",
+      "Bash(pip3 --version)",
+      "Bash(pip3 show fastapi uvicorn pytest httpx)",
+      "Bash(pip3 show pytest pytest-asyncio)",
+      "Bash(python3 -c \"import xml.etree.ElementTree as ET; tree = ET.parse\\(''/c/Users/Burak/Desktop/ibbkamera/list.xml''\\); root = tree.getroot\\(\\); print\\(''root tag:'', root.tag\\); cards = list\\(root\\); print\\(''camera count:'', len\\(cards\\)\\); print\\(''first card fields:'', [c.tag for c in list\\(cards[0]\\)]\\)\")",
+      "Bash(python3 -c \":*)",
+      "Bash(pip3 install -r backend/requirements.txt -q)",
+      "Bash(python3 -m pytest tests/ -v)",
+      "mcp__MCP_DOCKER__fetch_content"
+    ]
+  }
+}

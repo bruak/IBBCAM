@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KAMERA İZLEME PLATFORMU</title>
+    <link rel="stylesheet" href="vendor/leaflet/leaflet.css">
+    <link rel="stylesheet" href="vendor/leaflet-markercluster/MarkerCluster.css">
+    <link rel="stylesheet" href="vendor/leaflet-markercluster/MarkerCluster.Default.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar" role="complementary" aria-label="Kamera listesi">
+            <header class="sidebar-header">
+                <div class="logo">
+                    <div class="logo-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                            <circle cx="12" cy="13" r="4"></circle>
+                        </svg>
+                    </div>
+                    <h1>CAM VISUALIZER</h1>
+                </div>
+                <p class="subtitle">Canlı Şehir Kameraları ve otomatik durum kontrolü</p>
+
+                <div class="search-box">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                    <input type="search" id="searchInput" placeholder="Kamera ara..."
+                        autocomplete="off" aria-label="Kamera ara">
+                </div>
+
+                <div class="filters" role="group" aria-label="Durum filtresi">
+                    <button class="filter-btn active" data-status="all">Tümü (<span id="count-all">0</span>)</button>
+                    <button class="filter-btn" data-status="online">Çalışıyor (<span id="count-active">0</span>)</button>
+                    <button class="filter-btn" data-status="offline">Kapalı (<span id="count-passive">0</span>)</button>
+                </div>
+
+                <div class="sort-row">
+                    <select id="sortSelect" class="sort-select" aria-label="Sıralama">
+                        <option value="name">A-Z</option>
+                        <option value="online">Çalışıyor Önce</option>
+                        <option value="offline">Kapalı Önce</option>
+                    </select>
+                </div>
+
+                <div class="health-summary" id="healthSummary" role="status" aria-live="polite">
+                    Kamera verileri yükleniyor...
+                </div>
+            </header>
+
+            <div class="camera-list" id="cameraList" role="list"></div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content" role="main">
+            <div id="map" aria-label="İstanbul kamera haritası"></div>
+        </main>
+    </div>
+
+    <!-- Video Modal -->
+    <div class="modal" id="videoModal" role="dialog" aria-modal="true"
+        aria-labelledby="modalTitle" hidden>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Kamera Adı</h2>
+                <button class="close-btn" id="closeModal" aria-label="Kapat">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="player-wrapper">
+                    <video id="videoPlayer" controls autoplay muted playsinline></video>
+                    <img id="fallbackImage" src="" alt="Kamera anlık görüntüsü" hidden>
+                    <div id="streamError" class="stream-error" hidden role="alert"></div>
+                </div>
+                <div class="camera-details" id="modalDetails"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Vendor libraries (expose globals: L, Hls) -->
+    <script src="vendor/leaflet/leaflet.js"></script>
+    <script src="vendor/leaflet-markercluster/leaflet.markercluster.js"></script>
+    <script src="vendor/hls.js/hls.min.js"></script>
+
+    <!-- App entry point (ES module, deferred by default) -->
+    <script type="module" src="js/main.js"></script>
+
+</body>
+</html>

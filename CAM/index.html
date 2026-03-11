@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-width=1.0">
+    <title>KAMERA İZLEME PLATFORMU</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+    <!-- Leaflet MarkerCluster CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <header class="sidebar-header">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z">
+                            </path>
+                            <circle cx="12" cy="13" r="4"></circle>
+                        </svg>
+                    </div>
+                    <h1>CAM VISUALIZER</h1>
+                </div>
+                <p class="subtitle">Canlı Şehir Kameraları ve otomatik durum kontrolü</p>
+
+                <div class="search-box">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                    <input type="text" id="searchInput" placeholder="Kamera ara...">
+                </div>
+
+                <div class="filters">
+                    <button class="filter-btn active" data-status="all">Tümü (<span id="count-all">0</span>)</button>
+                    <button class="filter-btn" data-status="online">Çalışıyor (<span id="count-active">0</span>)</button>
+                    <button class="filter-btn" data-status="offline">Kapalı (<span id="count-passive">0</span>)</button>
+                </div>
+
+                <div class="health-summary" id="healthSummary">
+                    Aktif görünen kameralar arka planda doğrulanıyor...
+                </div>
+            </header>
+
+            <div class="camera-list" id="cameraList">
+                <!-- Camera items will be loaded here -->
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div id="map"></div>
+        </main>
+    </div>
+
+    <!-- Video Modal -->
+    <div class="modal" id="videoModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Kamera Adı</h2>
+                <button class="close-btn" id="closeModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="player-wrapper">
+                    <video id="videoPlayer" controls autoplay muted></video>
+                    <img id="fallbackImage" src="" alt="Kamera Görüntüsü" style="display:none;">
+                </div>
+                <div class="camera-details" id="modalDetails">
+                    <!-- Status and Info -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Data -->
+    <script src="cameras.js"></script>
+
+    <!-- Scripts -->
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+    <!-- Leaflet MarkerCluster JS -->
+    <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+    <!-- HLS.js for streaming -->
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@1"></script>
+    <script src="app.js"></script>
+
+</body>
+
+</html>
