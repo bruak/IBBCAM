@@ -198,3 +198,4 @@ Sonra tarayıcıda `http://localhost:8000/CAM/` adresine git.
 
 Özetle bu repo, mevcut kamera envanterini hızlıca görselleştirmek için hazırlanmış hafif bir tarayıcı uygulamasıdır. Asıl veri akışı `list.xml -> convert.py -> cameras.js -> index.html/app.js` zincirine dayanır.
 "# IBBCAM" 
+"# IBBCAM" 
