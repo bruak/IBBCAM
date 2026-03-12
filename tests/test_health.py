@@ -11,9 +11,11 @@ def reset_state():
     import backend.health as hmod
     state._health.clear()
     hmod._semaphore = None
+    hmod._background_task = None
     yield
     state._health.clear()
     hmod._semaphore = None
+    hmod._background_task = None
 
 
 async def test_http_200_marks_online():
@@ -57,7 +59,7 @@ async def test_timeout_marks_offline_with_turkish_reason():
 
     result = state.get("3")
     assert result["status"] == "offline"
-    assert "aşımı" in result["reason"]
+    assert "asimi" in result["reason"]
 
 
 async def test_empty_capture_image_marks_offline_without_http_call():

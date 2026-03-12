@@ -33,6 +33,8 @@ def client():
         patch("backend.parser.load_cameras", return_value=MOCK_CAMERAS),
         patch("backend.state.seed_from_cameras"),
         patch("backend.health.start_background_health_checks", new=AsyncMock(return_value=None)),
+        patch("backend.tkm_client.init_client", new=AsyncMock(return_value=None)),
+        patch("backend.tkm_client.close_client", new=AsyncMock(return_value=None)),
         patch("backend.state.get_all", return_value=MOCK_HEALTH),
     ):
         from fastapi.testclient import TestClient
@@ -90,6 +92,6 @@ def test_root_serves_html(client):
     assert "text/html" in resp.headers.get("content-type", "")
 
 
-def test_main_js_served(client):
-    resp = client.get("/js/main.js")
+def test_app_js_served(client):
+    resp = client.get("/app.js")
     assert resp.status_code == 200
