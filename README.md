@@ -45,6 +45,7 @@ flowchart LR
 .
 |-- backend/          # FastAPI API, parser, health check ve TKM proxy katmani
 |-- CAM/              # Uygulamanin aktif olarak servis edilen arayuzu
+|-- Dockerfile        # Uretim container tanimi
 |-- frontend/         # Alternatif/moduler frontend calismalari
 |-- tests/            # API, parser ve health testleri
 |-- list.xml          # Ham kamera verisi
@@ -137,6 +138,12 @@ Uygulamayi baslatma:
 uvicorn backend.main:app --reload
 ```
 
+Alternatif olarak, deploy ile ayni giris komutunu yerelde denemek icin:
+
+```bash
+python -m backend.start
+```
+
 Ardindan tarayicida su adresi ac:
 
 - `http://127.0.0.1:8000/`
@@ -145,6 +152,51 @@ API ornekleri:
 
 - `http://127.0.0.1:8000/api/cameras`
 - `http://127.0.0.1:8000/api/health`
+- `http://127.0.0.1:8000/api/healthz`
+
+## Canliya alma
+
+Proje canli ortam icin Docker ile hazirlandi. Container acilisinda:
+
+- `backend.start`, platformun verdigi `PORT` degiskenini okuyarak sunucuyu baslatir
+- `Dockerfile`, yalnizca gerekli runtime dosyalarini image icine alir
+- `/api/healthz`, platform health check'leri icin hafif bir liveness endpoint'i sunar
+
+### Docker ile
+
+Image olustur:
+
+```bash
+docker build -t ibbcam .
+```
+
+Container calistir:
+
+```bash
+docker run --name ibbcam -p 8000:8000 -e PORT=8000 ibbcam
+```
+
+Ardindan su adresleri kontrol et:
+
+- `http://127.0.0.1:8000/`
+- `http://127.0.0.1:8000/api/healthz`
+
+### Docker kullanmayan bir Python sunucusunda
+
+```bash
+pip install -r backend/requirements-prod.txt
+python -m backend.start
+```
+
+### PaaS notu
+
+Render, Railway veya benzeri bir servis kullaniyorsan repo kokundeki `Dockerfile` yeterlidir. Ek bir baslangic komutu yazmadan deploy edebilirsin. Health check yolu olarak `/api/healthz` kullan.
+
+Onemli operasyon notu:
+
+- Uygulama icindeki health check dongusu ve TKM cache'i process memory icindedir.
+- Bu nedenle ilk kurulumda tek instance ve tek worker ile baslatmak daha dogru davranistir.
+- `list.xml` degistiginde yeni image build edilmelidir.
 
 ### Sadece statik arayuzu acmak
 
