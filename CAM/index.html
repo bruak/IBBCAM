@@ -1,187 +1,198 @@
 <!DOCTYPE html>
 <html lang="tr">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KAMERA İZLEME PLATFORMU</title>
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Leaflet CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
-    <!-- Leaflet MarkerCluster CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
-    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
+
+    <title>İstanbul Canlı Kamera | İBB Trafik ve Şehir Kameraları Canlı İzle</title>
+    <meta name="description" content="İstanbul'un 1500'den fazla İBB trafik ve şehir kamerasını harita üzerinde canlı izleyin. Boğaz köprüleri, E-5, TEM, D100 ve tüm ilçelerdeki kamera görüntülerine ücretsiz, anlık erişim.">
+    <meta name="keywords" content="İstanbul canlı kamera, İBB kamera, İstanbul trafik kamerası, canlı trafik kamera, İstanbul şehir kamerası, İBB trafik, boğaz kamera, E5 kamera, TEM kamera, D100 kamera, istanbul trafik canlı izle">
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+    <meta name="author" content="İstanbul Büyükşehir Belediyesi">
+    <meta name="theme-color" content="#1e293b">
+    <meta name="application-name" content="İstanbul Canlı Kamera">
+    <meta name="geo.region" content="TR-34">
+    <meta name="geo.placename" content="İstanbul">
+    <link rel="canonical" href="https://istanbulcanlıkamera.com.tr/">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://istanbulcanlıkamera.com.tr/">
+    <meta property="og:title" content="İstanbul Canlı Kamera | İBB Trafik ve Şehir Kameraları">
+    <meta property="og:description" content="İstanbul'un 1500'den fazla İBB trafik ve şehir kamerasını harita üzerinde canlı izleyin. Boğaz, E-5, TEM, D100 ve tüm ilçeler.">
+    <meta property="og:locale" content="tr_TR">
+    <meta property="og:site_name" content="İstanbul Canlı Kamera">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="İstanbul Canlı Kamera | İBB Trafik ve Şehir Kameraları">
+    <meta name="twitter:description" content="İstanbul'un 1500'den fazla İBB trafik ve şehir kamerasını harita üzerinde canlı izleyin.">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="shortcut icon" href="favicon.svg">
+    <link rel="apple-touch-icon" href="favicon.svg">
+
+    <!-- Structured Data: WebApplication -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "İstanbul Canlı Kamera",
+      "alternateName": "İBB Kamera",
+      "url": "https://istanbulcanlıkamera.com.tr/",
+      "description": "İstanbul'un 1500'den fazla trafik ve şehir kamerasını harita üzerinde canlı izleme uygulaması. Boğaz köprüleri, E-5, TEM, D100 başta olmak üzere tüm ilçelerdeki İBB kamera görüntüleri.",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Web",
+      "inLanguage": "tr-TR",
+      "isAccessibleForFree": true,
+      "about": {
+        "@type": "City",
+        "name": "İstanbul",
+        "containedInPlace": {
+          "@type": "Country",
+          "name": "Türkiye"
+        }
+      },
+      "provider": {
+        "@type": "Organization",
+        "name": "İstanbul Büyükşehir Belediyesi",
+        "url": "https://www.ibb.istanbul",
+        "sameAs": "https://www.wikidata.org/wiki/Q1524162"
+      }
+    }
+    </script>
+    <!-- Structured Data: BreadcrumbList -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [{
+        "@type": "ListItem",
+        "position": 1,
+        "name": "İstanbul Canlı Kamera",
+        "item": "https://istanbulcanlıkamera.com.tr/"
+      }]
+    }
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css">
     <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
+    <div class="app-shell">
+        <aside class="sidebar" id="mobileSheet">
+            <div class="sheet-grab" id="sheetGrab" aria-hidden="true"></div>
 
-    <div class="app-container">
-        <!-- Sidebar -->
-        <aside class="sidebar" id="sidebar">
-            <div class="mobile-sheet-bar">
-                <span class="mobile-sheet-handle" aria-hidden="true"></span>
-                <div class="mobile-sheet-meta">
-                    <span class="mobile-sheet-title">Kameralar</span>
-                    <span class="mobile-sheet-summary" id="mobileSheetSummary">0 kamera listeleniyor</span>
-                </div>
-                <button class="mobile-sheet-toggle" id="mobileSheetToggle" type="button" aria-expanded="false"
-                    aria-controls="sidebarScroll">
-                    <span id="mobileSheetToggleLabel">Liste</span>
-                </button>
-            </div>
-
-            <div class="sidebar-scroll" id="sidebarScroll">
-                <header class="sidebar-header">
-                <div class="logo">
-                    <div class="logo-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                            stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z">
-                            </path>
-                            <circle cx="12" cy="13" r="4"></circle>
-                        </svg>
+            <header class="sidebar-header" id="sheetHeader">
+                <div class="sidebar-topline">
+                    <div>
+                        <p class="eyebrow">İstanbul Şehir Kameraları</p>
+                        <h1>İBB Kameralar</h1>
+                        <p class="subtitle">Haritadan seç, listeden ara, görüntüyü aç.</p>
                     </div>
-                    <h1>CAM VISUALIZER</h1>
-                </div>
-                <p class="subtitle">Canlı Şehir Kameraları ve otomatik durum kontrolü</p>
-
-                <!-- Stats Bar -->
-                <div class="stats-bar" id="statsBar">
-                    <div class="stat-item">
-                        <span class="stat-value" id="stat-total">0</span>
-                        <span class="stat-label">Toplam</span>
-                    </div>
-                    <div class="stat-item stat-online">
-                        <span class="stat-value" id="stat-online">0</span>
-                        <span class="stat-label">Çevrimiçi</span>
-                    </div>
-                    <div class="stat-item stat-offline">
-                        <span class="stat-value" id="stat-offline">0</span>
-                        <span class="stat-label">Çevrimdışı</span>
-                    </div>
-                    <div class="stat-item stat-checking">
-                        <span class="stat-value" id="stat-checking">0</span>
-                        <span class="stat-label">Kontrol</span>
-                    </div>
-                    <div class="stat-divider"></div>
-                    <div class="stat-item stat-traffic">
-                        <span class="stat-value" id="stat-traffic">--</span>
-                        <span class="stat-label">Trafik</span>
-                    </div>
-                    <div class="stat-item stat-traffic-an">
-                        <span class="stat-value" id="stat-traffic-an">--</span>
-                        <span class="stat-label">Anadolu</span>
-                    </div>
-                    <div class="stat-item stat-traffic-av">
-                        <span class="stat-value" id="stat-traffic-av">--</span>
-                        <span class="stat-label">Avrupa</span>
-                    </div>
+                    <button id="sheetToggleBtn" type="button" class="sheet-toggle-btn" aria-expanded="false" aria-controls="mobileSheetContent">
+                        Listeyi Aç
+                    </button>
                 </div>
 
-                <!-- Bridges Status Panel -->
-                <div class="bridges-panel" id="bridgesPanel"></div>
-
-                <div class="search-box">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <label class="search-box" for="searchInput">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                         <circle cx="11" cy="11" r="8"></circle>
                         <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                     </svg>
-                    <input type="search" id="searchInput" placeholder="Kamera ara..." autocomplete="off">
-                </div>
+                    <input id="searchInput" type="search" placeholder="Kamera ara..." autocomplete="off">
+                </label>
 
-                <div class="filters">
-                    <button class="filter-btn active" data-status="all">Tümü (<span id="count-all">0</span>)</button>
-                    <button class="filter-btn" data-status="online">Çalışıyor (<span id="count-active">0</span>)</button>
-                    <button class="filter-btn" data-status="offline">Kapalı (<span id="count-passive">0</span>)</button>
-                    <button class="filter-btn filter-btn-fav" data-status="favorites" title="Favoriler">
-                        <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" stroke="none">
-                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                        </svg>
-                        <span id="count-favorites">0</span>
-                    </button>
-                </div>
+                <p class="helper-text" id="healthSummary">Kamera durumu yükleniyor...</p>
 
-                <!-- District Filter -->
-                <div class="district-filter">
-                    <select id="districtSelect">
-                        <option value="">Tüm İlçeler</option>
-                    </select>
-                </div>
-
-                <div class="health-summary" id="healthSummary">
-                    Aktif görünen kameralar arka planda doğrulanıyor...
+                <div class="mobile-tabs" role="tablist" aria-label="Kamera bölümleri">
+                    <button type="button" class="tab-btn active" id="popularTabBtn" data-tab="popular" role="tab" aria-selected="true" aria-controls="popularSection">Popüler</button>
+                    <button type="button" class="tab-btn" id="listTabBtn" data-tab="list" role="tab" aria-selected="false" aria-controls="listSection">Tüm Kameralar</button>
                 </div>
             </header>
 
-                <div class="camera-list" id="cameraList">
-                    <!-- Camera items will be loaded here -->
-                </div>
+            <div class="sidebar-content" id="mobileSheetContent">
+                <section class="popular-section active" id="popularSection" aria-labelledby="popularTitle" data-panel="popular">
+                    <div class="section-head">
+                        <h2 id="popularTitle">En Çok Açılan Kameralar</h2>
+                        <button id="refreshPopularBtn" type="button" class="ghost-btn">Yenile</button>
+                    </div>
+                    <div id="popularList" class="popular-list">
+                        <div class="empty-card">Henüz veri yok.</div>
+                    </div>
+                </section>
+
+                <section class="list-section active" id="listSection" aria-labelledby="cameraListTitle" data-panel="list">
+                    <div class="section-head sticky-head">
+                        <h2 id="cameraListTitle">Kamera Listesi</h2>
+                        <span id="listCount" class="count-pill">0</span>
+                    </div>
+                    <div id="cameraList" class="camera-list"></div>
+                </section>
             </div>
         </aside>
 
-        <!-- Main Content -->
-        <main class="main-content">
+        <main class="map-panel">
             <div id="map"></div>
-            <button class="map-action-btn" id="locateMeBtn" type="button" title="Konumumu goster">
-                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="3"></circle>
-                    <path d="M12 2v3m0 14v3m10-10h-3M5 12H2m17.07 7.07-2.12-2.12M7.05 7.05 4.93 4.93m14.14 0-2.12 2.12M7.05 16.95l-2.12 2.12"></path>
-                </svg>
-                <span id="locateMeLabel">Konumum</span>
-            </button>
-        </main>
 
-        <div class="mobile-sheet-backdrop" id="mobileSheetBackdrop"></div>
+            <button id="mobileMenuBtn" type="button" class="mobile-menu-btn" aria-expanded="false" aria-controls="mobileSheet">
+                Kameralar
+            </button>
+
+            <section class="map-summary" aria-label="Kamera özeti">
+                <article class="summary-card subtle">
+                    <span class="summary-label" data-short-label="Toplam">Toplam</span>
+                    <strong id="statTotal">0</strong>
+                </article>
+                <article class="summary-card subtle online">
+                    <span class="summary-label" data-short-label="Canlı">Canlı</span>
+                    <strong id="statLive">0</strong>
+                </article>
+                <article class="summary-card subtle image-only has-tooltip">
+                    <span class="summary-label" data-short-label="Son">Son Görüntü</span>
+                    <strong id="statImageOnly">0</strong>
+                    <span class="stat-tooltip">Canlı yayın bağlantısı olmayan ama anlık fotoğraf görüntüsü alınabilen kameralar</span>
+                </article>
+                <article class="summary-card subtle offline">
+                    <span class="summary-label" data-short-label="Kapalı">Kapalı</span>
+                    <strong id="statOffline">0</strong>
+                </article>
+            </section>
+        </main>
     </div>
 
-    <!-- Video Modal -->
     <div class="modal" id="videoModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
         <div class="modal-content">
-            <div class="modal-header">
-                <h2 id="modalTitle">Kamera Adı</h2>
-                <div class="modal-header-actions">
-                    <button class="modal-action-btn" id="favModalBtn" title="Favorilere ekle">
-                        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                        </svg>
-                    </button>
-                    <button class="modal-action-btn" id="fullscreenBtn" title="Tam ekran">
-                        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
-                        </svg>
-                    </button>
-                    <button class="modal-action-btn" id="shareBtn" title="Paylaş">
-                        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
-                            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
-                        </svg>
-                    </button>
-                    <button class="close-btn" id="closeModal" aria-label="Kapat">&times;</button>
+            <div class="modal-header" id="modalHeader">
+                <div class="modal-title-block">
+                    <p class="modal-kicker">Kamera Görüntüsü</p>
+                    <h2 id="modalTitle">Kamera</h2>
+                </div>
+                <div class="modal-actions">
+                    <button id="retryStreamBtn" type="button" class="ghost-btn modal-ghost-btn">Yayını Yeniden Dene</button>
+                    <button class="close-btn" id="closeModal" aria-label="Kapat">×</button>
                 </div>
             </div>
             <div class="modal-body">
-                <div class="player-wrapper" id="playerWrapper">
-                    <video id="videoPlayer" controls autoplay muted></video>
-                    <img id="fallbackImage" src="" alt="Kamera Görüntüsü" style="display:none;">
-                </div>
-                <div class="camera-details" id="modalDetails">
-                    <!-- Status and Info -->
+                <div class="player-wrapper image-only" id="playerWrapper">
+                    <video id="liveVideo" playsinline controls muted hidden></video>
+                    <img id="fallbackImage" alt="Kamera görüntüsü">
+                    <div class="player-empty" id="playerEmpty" hidden>Bu kamera için doğrulanmış canlı yayın veya son görüntü yok.</div>
+                    <div class="player-status" id="playerStatus">Son görüntü gösteriliyor</div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Scripts -->
-    <!-- Leaflet JS -->
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
-    <!-- Leaflet MarkerCluster JS -->
     <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
-    <!-- HLS.js for streaming -->
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@1"></script>
     <script src="app.js"></script>
-
 </body>
-
 </html>
