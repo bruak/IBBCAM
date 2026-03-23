@@ -41,6 +41,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     let activeBaseLayer = null;
     let currentMapTheme = "dark";
     let mapThemeToggleBtn = null;
+    let locateMeBtn = null;
+    let userLocationMarker = null;
+    let userLocationAccuracyCircle = null;
 
     function loadStoredMapTheme() {
         try {
@@ -95,6 +98,85 @@ document.addEventListener("DOMContentLoaded", async () => {
     };
     mapThemeControl.addTo(map);
     applyMapTheme(loadStoredMapTheme());
+
+    function setLocateButtonState(label, disabled = false) {
+        if (!locateMeBtn) return;
+        locateMeBtn.textContent = label;
+        locateMeBtn.disabled = disabled;
+        locateMeBtn.setAttribute("aria-busy", disabled ? "true" : "false");
+    }
+
+    function renderUserLocation(latitude, longitude, accuracy) {
+        const latlng = [latitude, longitude];
+
+        if (!userLocationMarker) {
+            userLocationMarker = L.marker(latlng, {
+                icon: L.divIcon({
+                    className: "user-location-icon",
+                    html: '<div class="user-location-marker"></div>',
+                    iconSize: [18, 18],
+                    iconAnchor: [9, 9]
+                })
+            }).addTo(map);
+        } else {
+            userLocationMarker.setLatLng(latlng);
+        }
+
+        if (!userLocationAccuracyCircle) {
+            userLocationAccuracyCircle = L.circle(latlng, {
+                radius: Math.max(accuracy || 0, 15),
+                color: "#38bdf8",
+                weight: 1,
+                fillColor: "#38bdf8",
+                fillOpacity: 0.14
+            }).addTo(map);
+        } else {
+            userLocationAccuracyCircle.setLatLng(latlng);
+            userLocationAccuracyCircle.setRadius(Math.max(accuracy || 0, 15));
+        }
+
+        map.flyTo(latlng, Math.max(map.getZoom(), 15), { animate: true, duration: 1.1 });
+    }
+
+    function requestUserLocation() {
+        if (!navigator.geolocation) {
+            setLocateButtonState("Destek yok");
+            window.setTimeout(() => setLocateButtonState("Konumum"), 2000);
+            return;
+        }
+
+        setLocateButtonState("Bulunuyor...", true);
+        navigator.geolocation.getCurrentPosition((position) => {
+            renderUserLocation(
+                position.coords.latitude,
+                position.coords.longitude,
+                position.coords.accuracy
+            );
+            setLocateButtonState("Konumum", false);
+        }, () => {
+            setLocateButtonState("Alınamadı", false);
+            window.setTimeout(() => setLocateButtonState("Konumum"), 2200);
+        }, {
+            enableHighAccuracy: true,
+            timeout: 10000,
+            maximumAge: 60000
+        });
+    }
+
+    const locateMeControl = L.control({ position: "topleft" });
+    locateMeControl.onAdd = () => {
+        const button = L.DomUtil.create("button", "map-theme-control locate-me-control");
+        button.type = "button";
+        button.setAttribute("aria-label", "Konumumu göster");
+        button.setAttribute("title", "Konumumu göster");
+        button.textContent = "Konumum";
+        L.DomEvent.disableClickPropagation(button);
+        L.DomEvent.disableScrollPropagation(button);
+        L.DomEvent.on(button, "click", requestUserLocation);
+        locateMeBtn = button;
+        return button;
+    };
+    locateMeControl.addTo(map);
 
     const markers = L.markerClusterGroup({
         chunkedLoading: true,

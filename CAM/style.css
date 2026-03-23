@@ -385,6 +385,19 @@ h2 { font-size: 1rem; }
     background: rgba(234, 88, 12, 0.88);
 }
 
+.locate-me-control {
+    margin-top: 8px;
+}
+
+.user-location-marker {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #38bdf8;
+    border: 3px solid rgba(255, 255, 255, 0.96);
+    box-shadow: 0 0 0 7px rgba(56, 189, 248, 0.22);
+}
+
 .radar-marker {
     width: 22px !important;
     height: 22px !important;
