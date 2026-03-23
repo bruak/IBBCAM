@@ -147,8 +147,28 @@ document.addEventListener("DOMContentLoaded", async () => {
     const locateMeBtn = document.getElementById("locateMeBtn");
     const locateMeLabel = document.getElementById("locateMeLabel");
     const MOBILE_BREAKPOINT = 768;
+    const HTTPCAT = {
+        searchEmpty: "https://http.cat/404",
+        loadError: "https://http.cat/500",
+        streamUnavailable: "https://http.cat/503"
+    };
     let mobilePanelOpen = false;
     let mapResizeTimeout = 0;
+
+    function renderEmptyState({
+        title = "Durum bilgisi",
+        message = "Gosterilecek icerik yok.",
+        imageUrl = HTTPCAT.loadError,
+        compact = false
+    } = {}) {
+        return `
+            <div class="empty-state ${compact ? "empty-state-compact" : ""}">
+                <img class="empty-state-cat" src="${imageUrl}" alt="${esc(title)}" loading="lazy" referrerpolicy="no-referrer">
+                <strong>${esc(title)}</strong>
+                <p>${esc(message)}</p>
+            </div>
+        `;
+    }
 
     // --- District Extraction ---
     function extractDistricts() {
@@ -335,6 +355,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     } catch (error) {
         if (healthSummaryEl) {
             healthSummaryEl.innerText = `Kamera verileri yuklenemedi: ${error.message}`;
+            cameraListEl.innerHTML = renderEmptyState({
+                title: "Kamera verisi yuklenemedi",
+                message: "Liste su an getirilemedi. Birazdan yeniden deneyin.",
+                imageUrl: HTTPCAT.loadError
+            });
         }
     }
 
@@ -866,7 +891,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         const visibleCameras = camerasToRender.slice(0, 100);
 
         if (camerasToRender.length === 0) {
-            cameraListEl.innerHTML = '<div class="empty-state">Kamera bulunamadı...</div>';
+            cameraListEl.innerHTML = renderEmptyState({
+                title: "Kamera bulunamadi",
+                message: "Arama veya filtre sonucunda eslesen kamera cikmadi.",
+                imageUrl: HTTPCAT.searchEmpty,
+                compact: true
+            });
             return;
         }
 
@@ -1038,7 +1068,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         videoPlayer.style.display = "none";
         fallbackImage.style.display = "block";
-        fallbackImage.src = imageSource || "https://via.placeholder.com/800x450?text=Görüntü+Yok";
+        fallbackImage.src = imageSource || HTTPCAT.streamUnavailable;
     }
 
     function closeModal() {

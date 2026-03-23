@@ -8,7 +8,8 @@ import logging
 from contextlib import asynccontextmanager
 from pathlib import Path
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 
 from backend import health, parser, state, tkm_client
@@ -20,6 +21,7 @@ from backend.router_tkm import router as tkm_router
 logging.basicConfig(level=logging.INFO)
 
 FRONTEND_DIR = Path(__file__).parent.parent / "CAM"
+ERROR_500_PAGE = FRONTEND_DIR / "500.html"
 
 
 @asynccontextmanager
@@ -34,6 +36,17 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(title="IBB Kamera API", lifespan=lifespan)
+
+
+@app.exception_handler(Exception)
+async def unhandled_exception_handler(request: Request, exc: Exception):
+    logging.exception("Unhandled application error", exc_info=exc)
+    if request.url.path.startswith("/api"):
+        return JSONResponse(status_code=500, content={"detail": "Internal Server Error"})
+    if ERROR_500_PAGE.exists():
+        return FileResponse(ERROR_500_PAGE, status_code=500)
+    return JSONResponse(status_code=500, content={"detail": "Internal Server Error"})
+
 
 app.include_router(cameras_router, prefix="/api")
 app.include_router(health_router, prefix="/api")
