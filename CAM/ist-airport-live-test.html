@@ -132,15 +132,17 @@
       <p class="eyebrow">Test Sayfası</p>
       <h1>İstanbul Havalimanı Canlı Yayın Testi</h1>
       <p class="subtitle">
-        Bu sayfa sadece canlı yayın iframe'lerinin bizim domain altında açılıp açılmadığını doğrulamak için eklendi.
-        Başarılı olursa bir sonraki adımda bunu harita üzerinde Sabiha Gökçen civarına özel bir nokta/katman olarak entegre ederiz.
+        İlk iframe denemesi başarısız olduğu için bu sürümde gerçek embed yöntemi kullanılıyor:
+        dış player script'i ayrı test sayfalarında yükleniyor, bu sayfa da onları iframe içinde çağırıyor.
       </p>
       <div class="notice">
-        Kaynak yayın üçüncü taraf player üzerinden gömülüyor. Eğer player siyah ekran verirse veya hata gösterirse,
-        bu genelde domain/referrer kısıtı olduğu anlamına gelir.
+        Eğer bu sürüm çalışırsa sorun iframe değil, embed'in <code>script src</code> ile yüklenmesi gerektiği anlamına gelir.
+        Eğer yine çalışmazsa büyük ihtimalle domain/referrer kısıtı vardır.
       </div>
       <div class="actions">
         <a class="btn" href="https://www.istairport.com/havalimani/haritalar/havalimani-canli-yayin/operasyon-merkezi" target="_blank" rel="noopener">Orijinal sayfayı aç</a>
+        <a class="btn" href="/ist-airport-embed-apron.html" target="_blank" rel="noopener">Apron tekil test</a>
+        <a class="btn" href="/ist-airport-embed-apron2.html" target="_blank" rel="noopener">Apron 2 tekil test</a>
       </div>
     </section>
 
@@ -148,11 +150,11 @@
       <article class="card">
         <header class="card-head">
           <h2>Apron</h2>
-          <p>İlk embed testi. Player doğrudan üçüncü taraf canlı yayın iframe'i ile yükleniyor.</p>
+          <p>Bu iframe içinde bizim lokal test sayfamız açılıyor; asıl player script olarak onun içinde yükleniyor.</p>
         </header>
         <div class="player-wrap">
           <iframe
-            src="https://play28.player.im/player/kamera/play.php?kamera=apron&uid=2&sid=1"
+            src="/ist-airport-embed-apron.html"
             title="İstanbul Havalimanı Apron Canlı Yayın"
             allow="autoplay; fullscreen; picture-in-picture"
             allowfullscreen
@@ -160,18 +162,18 @@
             referrerpolicy="strict-origin-when-cross-origin"></iframe>
         </div>
         <div class="card-foot">
-          Path hazır. Eğer bu player sorunsuz açılırsa canlı yayın entegrasyonu teknik olarak mümkün.
+          Bu çalışırsa sonraki adımda harita üstünde özel bir havaalanı kamera noktası olarak kullanabiliriz.
         </div>
       </article>
 
       <article class="card">
         <header class="card-head">
           <h2>Apron 2</h2>
-          <p>İkinci yayın için ayrı kamera parametresi kullanılıyor. Bunu da aynı şekilde test ediyoruz.</p>
+          <p>İkinci kamera da aynı yöntemle ama ayrı embed test sayfası üzerinden yükleniyor.</p>
         </header>
         <div class="player-wrap">
           <iframe
-            src="https://play28.player.im/player/kamera/play.php?kamera=apron2&uid=2&sid=1"
+            src="/ist-airport-embed-apron2.html"
             title="İstanbul Havalimanı Apron 2 Canlı Yayın"
             allow="autoplay; fullscreen; picture-in-picture"
             allowfullscreen
@@ -179,7 +181,7 @@
             referrerpolicy="strict-origin-when-cross-origin"></iframe>
         </div>
         <div class="card-foot">
-          Eğer bu ikincisi de çalışırsa harita entegrasyonunda iki ayrı nokta veya tek noktada iki sekme düşünebiliriz.
+          Eğer iki yayın da açılırsa tek popup içinde sekmeli yapı veya iki ayrı marker seçeneği mümkün.
         </div>
       </article>
     </section>
